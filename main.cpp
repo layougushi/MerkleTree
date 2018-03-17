@@ -1,9 +1,11 @@
 #include <iostream>
+#include "tree.h"
 
-#include "tree.hpp"
-
+using namespace std;
 
 int main(int argc, char const *argv[]) {
+
+  cout << "Hallo Welt";
 
   std::vector<string> v;
 
@@ -14,7 +16,7 @@ int main(int argc, char const *argv[]) {
   v.push_back("5");
   v.push_back("6");
 
-  tree tr(v);
+  tree ntree(v);
 
 
   return 0;

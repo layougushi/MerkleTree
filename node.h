@@ -9,8 +9,8 @@ private:
   vector<node*> child_ptr;
 
 public:
-  node::node (node* childL, node* childR);
-  node::node (string hash_str);
+  node (node* childL, node* childR);
+  node (string hash_str);
   node* getChild(int pos);
   string getHash();
   string setHash(string hash_str);
