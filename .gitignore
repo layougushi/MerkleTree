@@ -12,6 +12,10 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 build
+.idea
+.atom-dbg.cson
+MerkleTree.cbp
+MerkleTree
 
 
 # End of https://www.gitignore.io/api/cmake
