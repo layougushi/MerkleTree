@@ -5,17 +5,17 @@ using namespace std;
 
 class tree{
 private:
-  vector<string> leafs;
   string merkleRoot;
-  vector<node*> base_childs;
-  void buildBaseLeafes();
-  int makeBinary(std::vector<node*> node_vector);
-  void printTreeLevel(vector<node*> v, int level);
-
+  int makeBinary(vector<node*> &node_vector);
+  void printTreeLevel(vector<node*> v);
+  vector<vector<node*>> base;
 
 public:
-  tree(std::vector<string> leaf);
+  tree();
   void buildTree();
   string getMerkleRoot();
+  void buildBaseLeafes(vector<string> base_leafs);
+  void iterateUp(int element);
+  int verify(string hash);
   virtual ~tree();
 };

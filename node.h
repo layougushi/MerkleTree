@@ -6,13 +6,18 @@ using namespace std;
 class node {
 private:
   string hash_str;
-  vector<node*> child_ptr;
+  node* parent;
+  node* children[2];
 
 public:
-  node (node* childL, node* childR);
-  node (string hash_str);
-  node* getChild(int pos);
+  node ();
+  node* getParent();
+  void setChildren(node* children_l, node* children_r);
+  node* getChildren(int index);
+  void setParent(node* parent);
   string getHash();
-  string setHash(string hash_str);
+  int checkDir();
+  node* getSibling();
+  void setHash(string hash_str);
   virtual ~node ();
 };

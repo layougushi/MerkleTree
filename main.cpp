@@ -5,7 +5,10 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  cout << "Hallo Welt";
+
+  string check_str = "";
+
+  cin >> check_str;
 
   std::vector<string> v;
 
@@ -16,7 +19,20 @@ int main(int argc, char const *argv[]) {
   v.push_back("5");
   v.push_back("6");
 
-  tree ntree(v);
+
+  tree ntree;
+
+  ntree.buildBaseLeafes(v);
+  ntree.buildTree();
+
+  std::cout << "Check if: " << check_str << " is contained in tree" << '\n';
+
+  if(ntree.verify(check_str)){
+    std::cout << "All Clear" << '\n';
+  } else {
+      std::cout << "Nope something is wrong" << '\n';
+  }
+
 
 
   return 0;

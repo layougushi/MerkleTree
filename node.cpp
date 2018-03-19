@@ -1,24 +1,47 @@
 #include "node.h"
 
-node::node (node* childL, node* childR){
-  this->child_ptr.push_back(childL);
-  this->child_ptr.push_back(childR);
-  this->hash_str = childL->getHash() + childR->getHash();
+
+node::node (){
+  this->parent = NULL;
+  this->children[0] = NULL;
+  this->children[1] = NULL;
 }
 
-node::node (string hash_str){
+void node::setHash(string hash_str){
   this->hash_str = hash_str;
-  this->child_ptr.push_back(NULL);
-  this->child_ptr.push_back(NULL);
 }
 
-node* node::getChild(int pos){
-  return this->child_ptr[pos];
+node* node::getParent(){
+  return this->parent;
+}
+
+void node::setParent(node* parent){
+  this->parent = parent;
+}
+
+void node::setChildren(node* children_l, node* children_r){
+  this->children[0] = children_l;
+  this->children[1] = children_r;
+}
+
+node* node::getSibling(){
+  node* parent = this->getParent();
+  return parent->getChildren(0) == this ? parent->getChildren(1) : parent->getChildren(0);
+
+}
+
+node* node::getChildren(int index){
+  return index <= 1 ? children[index] : NULL;
 }
 
 string node::getHash(){
     return this->hash_str;
 }
+
+int node::checkDir(){
+  return parent->getChildren(0) == this ? 0 : 1;
+}
+
 
 
 node::~node () {}

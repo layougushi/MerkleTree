@@ -1,62 +1,68 @@
 #include "tree.h"
 #include <iostream>
 
-
-tree::tree(std::vector<string> leaf){
-  this->leafs = leaf;
-}
+tree::tree () {}
 
 
-int tree::makeBinary(std::vector<node*> node_vector){
+int tree::makeBinary(vector<node*> &node_vector){
 
   int vectSize = node_vector.size();
 
-  if((node_vector.size()%2) != 0){
-    node_vector.push_back(node_vector.back());
+  if((vectSize%2) != 0){
+    node_vector.push_back(node_vector.end()[-1]);
     vectSize++;
   }
   return vectSize;
 }
 
 void tree::buildTree(){
-  buildBaseLeafes();
 
-  std::vector<node*> act_work_vect = base_childs;
-  makeBinary(act_work_vect);
-  printTreeLevel(act_work_vect, act_work_vect.size());
+  do {
+    vector<node*> new_nodes;
+    makeBinary(this->base.end()[-1]);
 
-  for (int i = act_work_vect.size(); i >= 0; i=i/2) {
-    std::vector<node*> next_vect;
-    for (int j = 0; j < act_work_vect.size(); j+=2) {
+    for (int i = 0; i < this->base.end()[-1].size(); i = i+2) {
+      node* new_parent = new node;
+      this->base.end()[-1][i]->setParent(new_parent);
+      this->base.end()[-1][i+1]->setParent(new_parent);
 
-      node *childL = act_work_vect[j];
-      node *childR = act_work_vect[j+1];
-
-      node new_node(childL,childR);
-      next_vect.push_back(&new_node);
+      new_parent->setHash(this->base.end()[-1][i]->getHash() + this->base.end()[-1][i+1]->getHash());
+      new_parent->setChildren(this->base.end()[-1][i],this->base.end()[-1][i+1]);
+      new_nodes.push_back(new_parent);
+      std::cout << "Hash together: " << this->base.end()[-1][i]->getHash() << " and " << this->base.end()[-1][i+1]->getHash() << " attached: " << &new_parent << endl;
     }
 
-    i = makeBinary(next_vect);
-    act_work_vect.swap(next_vect);
-    printTreeLevel(act_work_vect, i);
-  }
+    //printTreeLevel(new_nodes);
+
+    this->base.push_back(new_nodes);
+    std::cout << "Hashed level with: " << this->base.end()[-1].size() << '\n';
+
+  } while(this->base.end()[-1].size() > 1);
+
+  this->merkleRoot = this->base.end()[-1][0]->getHash();
+
 }
 
+void tree::printTreeLevel(vector<node*> v){
 
-void tree::printTreeLevel(vector<node*> v, int level){
+  cout << endl;
+
   for (node* el : v) {
       cout << el->getHash() << endl;
   }
-  cout << level << endl << endl;
 }
 
 
-void tree::buildBaseLeafes(){
+void tree::buildBaseLeafes(vector<string> base_leafs){
 
-  for (auto leaf : leafs){
-    node new_node(leaf);
-    base_childs.push_back(&new_node);
+  vector<node*> new_nodes;
+
+  for (auto leaf : base_leafs){
+    node* new_node = new node;
+    new_node->setHash(leaf);
+    new_nodes.push_back(new_node);
   }
+  this->base.push_back(new_nodes);
 }
 
 string tree::getMerkleRoot() {
@@ -64,6 +70,38 @@ string tree::getMerkleRoot() {
 }
 
 
-tree::~tree (){
+int tree::verify(string hash){
 
+  node* el_node = NULL;
+  string act_hash = hash;
+
+  for (int i = 0; i < this->base[0].size(); i++) {
+    if(this->base[0][i]->getHash() == hash)
+      el_node = this->base[0][i];
+  }
+
+  do {
+
+    if(el_node->checkDir() == 0)
+      act_hash += el_node->getSibling()->getHash();
+    else
+      act_hash = el_node->getSibling()->getHash() + act_hash;
+
+    el_node = el_node->getParent();
+  }while ((el_node->getParent()) != NULL);
+
+  return act_hash == merkleRoot ? 1 : 0;
 }
+
+void tree::iterateUp(int element){
+  node* el_node = this->base[0][element];
+
+  do {
+    std::cout << "Current Hash: " << el_node->getHash() << '\n';
+    /*std::cout << "Next Node: " << el_node << '\n';
+    std::cout << "Next Parent: " << el_node->getParent() << '\n';*/
+  }while ((el_node = el_node->getParent()) != NULL);
+  //std::cout << "Done iterating" << '\n';
+}
+
+tree::~tree () {}
