@@ -1,5 +1,6 @@
 #include "tree.h"
 #include <iostream>
+#include "picosha2.h"
 
 tree::tree () {}
 
@@ -41,6 +42,8 @@ void tree::buildTree(){
 
   this->merkleRoot = this->base.end()[-1][0]->getHash();
 
+  std::cout << "Merkle Root is: " << this->merkleRoot << endl << endl;
+
 }
 
 void tree::printTreeLevel(vector<node*> v){
@@ -57,12 +60,17 @@ void tree::buildBaseLeafes(vector<string> base_leafs){
 
   vector<node*> new_nodes;
 
+  std::cout << "Root leafs are: " << '\n';
+
   for (auto leaf : base_leafs){
     node* new_node = new node;
     new_node->setHash(leaf);
+    std::cout << new_node->getHash() << '\n';
+
     new_nodes.push_back(new_node);
   }
   this->base.push_back(new_nodes);
+  std::cout  << '\n';
 }
 
 string tree::getMerkleRoot() {
@@ -80,12 +88,16 @@ int tree::verify(string hash){
       el_node = this->base[0][i];
   }
 
+  std::cout << "Hash verify: " << act_hash << '\n';
+
   do {
 
     if(el_node->checkDir() == 0)
-      act_hash += el_node->getSibling()->getHash();
+      act_hash = picosha2::hash256_hex_string(act_hash + el_node->getSibling()->getHash());
     else
-      act_hash = el_node->getSibling()->getHash() + act_hash;
+      act_hash = picosha2::hash256_hex_string(el_node->getSibling()->getHash() + act_hash);
+
+    std::cout << "Hash verify: " << act_hash << '\n';
 
     el_node = el_node->getParent();
   }while ((el_node->getParent()) != NULL);

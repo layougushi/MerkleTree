@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tree.h"
+#include "picosha2.h"
 
 using namespace std;
 
@@ -8,16 +9,23 @@ int main(int argc, char const *argv[]) {
 
   string check_str = "";
 
-  cin >> check_str;
-
+  std::cout << "Enter Merkle Leafes: " << '\n';
   std::vector<string> v;
 
-  v.push_back("1");
-  v.push_back("2");
-  v.push_back("3");
-  v.push_back("4");
-  v.push_back("5");
-  v.push_back("6");
+  while(1) {
+    string str;
+    std::cin >> str;
+    if(str != ";")
+      v.push_back(str);
+    else
+      break;
+  }
+
+  std::cout << "Enter Leaf to verify: " << '\n';
+
+  cin >> check_str;
+
+  check_str = picosha2::hash256_hex_string(check_str);
 
 
   tree ntree;

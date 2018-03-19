@@ -10,4 +10,5 @@ add_executable(MerkleTree
         node.cpp
         node.h
         tree.cpp
-        tree.h)
+        tree.h
+        picosha2.h)

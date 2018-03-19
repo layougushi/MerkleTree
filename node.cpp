@@ -1,4 +1,5 @@
 #include "node.h"
+#include "picosha2.h"
 
 
 node::node (){
@@ -8,7 +9,7 @@ node::node (){
 }
 
 void node::setHash(string hash_str){
-  this->hash_str = hash_str;
+  this->hash_str = picosha2::hash256_hex_string(hash_str);
 }
 
 node* node::getParent(){
